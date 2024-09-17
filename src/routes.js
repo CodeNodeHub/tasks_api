@@ -5,17 +5,17 @@ const database = new Database()
 
 export const routes = [
   {
-    method: 'GET',
-    path: buildRoutPath('/tasks'),
+    method: "GET",
+    path: buildRoutPath("/tasks"),
     handler: (req, res) => {
-      const tasks = database.select('tasks')
+      const tasks = database.select("tasks")
 
       return res.end(JSON.stringify(tasks))
-    }
+    },
   },
   {
-    method: 'POST',
-    path: buildRoutPath('/tasks'),
+    method: "POST",
+    path: buildRoutPath("/tasks"),
     handler: (req, res) => {
       const { title, description } = req.body
 
@@ -23,20 +23,38 @@ export const routes = [
         id: task.length + 1,
         title,
         description,
-        completed_at: null
-
+        completed_at: null,
       }
 
-      database.insert('tasks', task)
+      database.insert("tasks", task)
 
       return res.writeHead(201).end()
+    },
+  },
+  {
+    method: "PUT",
+    path: buildRoutePath("/tasks/:id"),
+    handler: (req, res) => {
+      const { id } = req.params
+      const { title, description } = req.body
+
+      database.update("tasks", id, {
+        title,
+        description,
+      })
+
+      return res.writeHead(204).end()
     }
   },
   {
-    method: 'DELETE',
-    path: buildRoutPath('/tasks/:id'),
+    method: "DELETE",
+    path: buildRoutPath("/tasks/:id"),
     handler: (req, res) => {
-      return res.end()
-    }
-  }
+      const { id } = req.params
+
+      database.delete("tasks", id)
+
+      return res.writeHead(204).end()
+    },
+  },
 ]
