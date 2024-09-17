@@ -1,9 +1,12 @@
 import http from 'node:http'
+import { json } from './middlewares/json.js'
 
 const tasks = []
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   const { method, url } = req
+
+  await json(req, res)
 
   if (method === 'GET' && url === '/tasks'){
     return res
@@ -12,10 +15,11 @@ const server = http.createServer((req, res) => {
   }
 
   if (method === 'POST' && url === '/tasks') {
+    const { title, description } = req.body
     tasks.push({
       id: 1,
-      title: "Estudar Node",
-      description: "Aprenda o básico do Node.js",
+      title,
+      description,
       completed_at: null
     })
 
