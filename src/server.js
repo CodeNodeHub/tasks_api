@@ -3,7 +3,6 @@ import { json } from './middlewares/json.js'
 import { routes } from './routes.js'
 import { extractQueryParams } from './utils/extract-query-params.js'
 
-const database = new Database()
 
 const server = http.createServer(async (req, res) => {
   const { method, url } = req
@@ -25,7 +24,7 @@ const server = http.createServer(async (req, res) => {
     return route.handler(req, res)
   }
 
-  return res.writeHead(404).end()
+  return res.writeHead(404).end(JSON.stringify({ error: 'Route not found'}))
 })
 
 server.listen(3333)
